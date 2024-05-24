@@ -12,8 +12,8 @@ gemini_pro_player_dict = {}
 default_model_dict = {}
 
 error_info="⚠️⚠️⚠️\nSomething went wrong !\nplease try to change your prompt or contact the admin !"
-before_generate_info="🤖Generating🤖"
-download_pic_notify="🤖Loading picture🤖"
+before_generate_info="Đang trả lời..."
+download_pic_notify="Đang tạo ảnh... Đợi xíu nha"
 
 n = 30  #Number of historical records to keep
 
@@ -251,7 +251,7 @@ async def main():
     @bot.message_handler(commands=["start"])
     async def gemini_handler(message: Message):
         try:
-            await bot.reply_to( message , escape("Welcome, you can ask me questions now. \nFor example: `Who is john lennon?`"), parse_mode="MarkdownV2")
+            await bot.reply_to( message , escape("Xin chào, bạn có thể hỏi tôi bất cứ điều gì. \nFor example: `Who is john lennon?`"), parse_mode="MarkdownV2")
         except IndexError:
             await bot.reply_to(message, error_info)
 
@@ -260,7 +260,7 @@ async def main():
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
         except IndexError:
-            await bot.reply_to( message , escape("Please add what you want to say after /gemini. \nFor example: `/gemini Who is john lennon?`"), parse_mode="MarkdownV2")
+            await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini. \nVí dụ: `/gemini Bạn tên gì?`"), parse_mode="MarkdownV2")
             return
         await gemini(bot,message,m)
 
@@ -269,7 +269,7 @@ async def main():
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
         except IndexError:
-            await bot.reply_to( message , escape("Please add what you want to say after /gemini_pro. \nFor example: `/gemini_pro Who is john lennon?`"), parse_mode="MarkdownV2")
+            await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini_pro. \nVí dụ: `/gemini_pro Bạn tên gì?`"), parse_mode="MarkdownV2")
             return
         await gemini_pro(bot,message,m)
             
@@ -280,24 +280,24 @@ async def main():
             del gemini_player_dict[str(message.from_user.id)]
         if (str(message.from_user.id) in gemini_pro_player_dict):
             del gemini_pro_player_dict[str(message.from_user.id)]
-        await bot.reply_to(message, "Your history has been cleared")
+        await bot.reply_to(message, "Ok, đã xoá lịch sử chat")
 
     @bot.message_handler(commands=["switch"])
     async def gemini_handler(message: Message):
         if message.chat.type != "private":
-            await bot.reply_to( message , "This command is only for private chat !")
+            await bot.reply_to( message , "Oh no, lệnh này chỉ dành cho trò chuyện riêng tư !")
             return
         # Check if the player is already in default_model_dict.
         if str(message.from_user.id) not in default_model_dict:
             default_model_dict[str(message.from_user.id)] = False
-            await bot.reply_to( message , "Now you are using gemini-1.5-pro")
+            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng gemini-1.5-pro")
             return
         if default_model_dict[str(message.from_user.id)] == True:
             default_model_dict[str(message.from_user.id)] = False
-            await bot.reply_to( message , "Now you are using gemini-1.5-pro")
+            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini-1.5-pro")
         else:
             default_model_dict[str(message.from_user.id)] = True
-            await bot.reply_to( message , "Now you are using gemini-1.5-flash")
+            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Flash")
         
     
     
