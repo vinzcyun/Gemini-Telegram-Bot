@@ -238,11 +238,11 @@ async def main():
     await bot.delete_my_commands(scope=None, language_code=None)
     await bot.set_my_commands(
         commands=[
-            telebot.types.BotCommand("start", "Start"),
-            telebot.types.BotCommand("gemini", "using gemini-1.5-flash"),
-            telebot.types.BotCommand("gemini_pro", "using gemini-1.5-pro"),
-            telebot.types.BotCommand("clear", "Clear all history"),
-            telebot.types.BotCommand("switch","switch default model")
+            telebot.types.BotCommand("start", "Bắt đầu"),
+            telebot.types.BotCommand("gemini", "gemini-1.5-flash"),
+            telebot.types.BotCommand("gemini_pro", "gemini-1.5-pro"),
+            telebot.types.BotCommand("clear", "Xoá toàn bộ lịch sử trò chuyện"),
+            telebot.types.BotCommand("switch","Chuyển đổi mô hình AI")
         ],
     )
     print("Bot init done.")
