@@ -11,7 +11,7 @@ gemini_player_dict = {}
 gemini_pro_player_dict = {}
 default_model_dict = {}
 
-error_info="⚠️⚠️⚠️\nSomething went wrong !\nplease try to change your prompt or contact the admin !"
+error_info="⚠️⚠️⚠️\nDịch vụ không khả dụng !\nVui lòng nhập lại hoặc liên hệ quản trị viên!"
 before_generate_info="Đang trả lời..."
 download_pic_notify="Đang tạo ảnh... Đợi xíu nha"
 
@@ -251,7 +251,7 @@ async def main():
     @bot.message_handler(commands=["start"])
     async def gemini_handler(message: Message):
         try:
-            await bot.reply_to( message , escape("Xin chào, bạn có thể hỏi tôi bất cứ điều gì. \nFor example: `Who is john lennon?`"), parse_mode="MarkdownV2")
+            await bot.reply_to( message , escape("Xin chào, bạn có thể hỏi tôi bất cứ điều gì. \nVí dụ: `Bạn tên gì?`"), parse_mode="MarkdownV2")
         except IndexError:
             await bot.reply_to(message, error_info)
 
