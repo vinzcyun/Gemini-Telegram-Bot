@@ -242,7 +242,7 @@ async def main():
             telebot.types.BotCommand("gemini", "Gemini 1.5 Flash"),
             telebot.types.BotCommand("gemini_pro", "Gemini 1.5 Pro"),
             telebot.types.BotCommand("clear", "Xoá toàn bộ lịch sử trò chuyện"),
-            telebot.types.BotCommand("switch","Chuyển đổi nhanh mô hình AI (chỉ dành cho trò chuyện riêng tư) ")
+            telebot.types.BotCommand("chuyen","Chuyển đổi nhanh mô hình AI (chỉ dành cho trò chuyện riêng tư) ")
         ],
     )
     print("Bot init done.")
@@ -282,7 +282,7 @@ async def main():
             del gemini_pro_player_dict[str(message.from_user.id)]
         await bot.reply_to(message, "Ok, đã xoá lịch sử chat🥲🥹")
 
-    @bot.message_handler(commands=["switch"])
+    @bot.message_handler(commands=["chuyen"])
     async def gemini_handler(message: Message):
         if message.chat.type != "private":
             await bot.reply_to( message , "Oh no, lệnh này chỉ dành cho trò chuyện riêng tư !🥱🤨")
