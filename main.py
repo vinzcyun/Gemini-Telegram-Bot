@@ -239,10 +239,10 @@ async def main():
     await bot.set_my_commands(
         commands=[
             telebot.types.BotCommand("start", "Bắt đầu"),
-            telebot.types.BotCommand("gemini", "Gemini 1.5 Flash"),
-            telebot.types.BotCommand("gemini_pro", "Gemini 1.5 Pro"),
+            telebot.types.BotCommand("fast", "Gemini 1.5 Flash"),
+            telebot.types.BotCommand("pro", "Gemini 1.5 Pro"),
             telebot.types.BotCommand("clear", "Xoá toàn bộ lịch sử trò chuyện"),
-            telebot.types.BotCommand("chuyen","Chuyển đổi nhanh mô hình AI (chỉ dành cho trò chuyện riêng tư) ")
+            telebot.types.BotCommand("switch","Chuyển đổi nhanh mô hình AI (chỉ dành cho trò chuyện riêng tư) ")
         ],
     )
     print("Bot init done.")
@@ -255,7 +255,7 @@ async def main():
         except IndexError:
             await bot.reply_to(message, error_info)
 
-    @bot.message_handler(commands=["gemini"])
+    @bot.message_handler(commands=["fast"])
     async def gemini_handler(message: Message):
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
@@ -264,7 +264,7 @@ async def main():
             return
         await gemini(bot,message,m)
 
-    @bot.message_handler(commands=["gemini_pro"])
+    @bot.message_handler(commands=["pro"])
     async def gemini_handler(message: Message):
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
@@ -282,7 +282,7 @@ async def main():
             del gemini_pro_player_dict[str(message.from_user.id)]
         await bot.reply_to(message, "Ok, đã xoá lịch sử chat🥲🥹")
 
-    @bot.message_handler(commands=["chuyen"])
+    @bot.message_handler(commands=["switch"])
     async def gemini_handler(message: Message):
         if message.chat.type != "private":
             await bot.reply_to( message , "Oh no, lệnh này chỉ dành cho trò chuyện riêng tư !🥱🤨")
