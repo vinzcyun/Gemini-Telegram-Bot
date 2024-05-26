@@ -13,7 +13,7 @@ default_model_dict = {}
 
 error_info="⚠️⚠️⚠️\nDịch vụ không khả dụng !\nVui lòng nhập lại hoặc liên hệ quản trị viên!"
 before_generate_info="Đang trả lời..."
-download_pic_notify="Đang tạo ảnh... Đợi xíu nha"
+download_pic_notify="Đang tải ảnh... Đợi xíu nha"
 
 n = 30  #Number of historical records to keep
 
