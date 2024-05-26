@@ -239,10 +239,10 @@ async def main():
     await bot.set_my_commands(
         commands=[
             telebot.types.BotCommand("start", "Bắt đầu"),
-            telebot.types.BotCommand("gemini", "gemini-1.5-flash"),
-            telebot.types.BotCommand("gemini_pro", "gemini-1.5-pro"),
+            telebot.types.BotCommand("gemini", "Gemini 1.5 Flash"),
+            telebot.types.BotCommand("gemini_pro", "Gemini 1.5 Pro"),
             telebot.types.BotCommand("clear", "Xoá toàn bộ lịch sử trò chuyện"),
-            telebot.types.BotCommand("switch","Chuyển đổi mô hình AI")
+            telebot.types.BotCommand("switch","Chuyển đổi nhanh mô hình AI (chỉ dành cho trò chuyện riêng tư) ")
         ],
     )
     print("Bot init done.")
@@ -251,7 +251,7 @@ async def main():
     @bot.message_handler(commands=["start"])
     async def gemini_handler(message: Message):
         try:
-            await bot.reply_to( message , escape("Xin chào, bạn có thể hỏi tôi bất cứ điều gì. \nVí dụ: `Bạn tên gì?`"), parse_mode="MarkdownV2")
+            await bot.reply_to( message , escape("Xin chào, tôi là Gemini. Tôi là một mô hình ngôn ngữ được huấn luyện bởi VinZ và Google. Bạn muốn tôi giúp gì nào ?. \nCâu hỏi ví dụ: `Bạn ăn cơm chưa ?`"), parse_mode="MarkdownV2")
         except IndexError:
             await bot.reply_to(message, error_info)
 
@@ -260,7 +260,7 @@ async def main():
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
         except IndexError:
-            await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini. \nVí dụ: `/gemini Bạn tên gì?`"), parse_mode="MarkdownV2")
+            await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini. \nVí dụ: `/gemini Cách để thoát ế ?`"), parse_mode="MarkdownV2")
             return
         await gemini(bot,message,m)
 
@@ -269,7 +269,7 @@ async def main():
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
         except IndexError:
-            await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini_pro. \nVí dụ: `/gemini_pro Bạn tên gì?`"), parse_mode="MarkdownV2")
+            await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini_pro. \nVí dụ: `/gemini_pro Bạn có thể làm gì ?`"), parse_mode="MarkdownV2")
             return
         await gemini_pro(bot,message,m)
             
@@ -290,11 +290,11 @@ async def main():
         # Check if the player is already in default_model_dict.
         if str(message.from_user.id) not in default_model_dict:
             default_model_dict[str(message.from_user.id)] = False
-            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng gemini-1.5-pro")
+            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Pro")
             return
         if default_model_dict[str(message.from_user.id)] == True:
             default_model_dict[str(message.from_user.id)] = False
-            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini-1.5-pro")
+            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Pro")
         else:
             default_model_dict[str(message.from_user.id)] = True
             await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Flash")
