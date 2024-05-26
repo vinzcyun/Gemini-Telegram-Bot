@@ -11,9 +11,9 @@ gemini_player_dict = {}
 gemini_pro_player_dict = {}
 default_model_dict = {}
 
-error_info="⚠️⚠️⚠️\nDịch vụ không khả dụng !\nVui lòng nhập lại hoặc liên hệ quản trị viên!"
-before_generate_info="Đang trả lời..."
-download_pic_notify="Đang tải ảnh... Đợi xíu nha"
+error_info="⚠️⚠️⚠️\nDịch vụ không khả dụng !\nVui lòng nhập lại hoặc liên hệ quản trị viên!\nNguyên nhân: Có thể đang bị tràn ram hoặc không có mạng😵😵.\nĐã tự động liên hệ Admin👩‍💻."
+before_generate_info="Đang trả lời...Đợi xíu nhó🤪😮‍💨"
+download_pic_notify="Đang tải ảnh... Đợi xíu nha😋😋"
 
 n = 30  #Number of historical records to keep
 
@@ -251,7 +251,7 @@ async def main():
     @bot.message_handler(commands=["start"])
     async def gemini_handler(message: Message):
         try:
-            await bot.reply_to( message , escape("Xin chào, tôi là Gemini. Tôi là một mô hình ngôn ngữ được huấn luyện bởi VinZ và Google. Bạn muốn tôi giúp gì nào ?. \nCâu hỏi ví dụ: `Bạn ăn cơm chưa ?`"), parse_mode="MarkdownV2")
+            await bot.reply_to( message , escape("Xin chào, tôi là Gemini. Tôi là một mô hình ngôn ngữ được huấn luyện bởi VinZ và Google. Bạn muốn tôi giúp gì nào ?. \nCâu hỏi ví dụ: `Bạn ăn cơm chưa ?🤔🤔`"), parse_mode="MarkdownV2")
         except IndexError:
             await bot.reply_to(message, error_info)
 
@@ -260,7 +260,7 @@ async def main():
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
         except IndexError:
-            await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini. \nVí dụ: `/gemini Cách để thoát ế ?`"), parse_mode="MarkdownV2")
+            await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini. \nVí dụ: `/gemini Cách để thoát ế ?🤪😜`"), parse_mode="MarkdownV2")
             return
         await gemini(bot,message,m)
 
@@ -269,7 +269,7 @@ async def main():
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
         except IndexError:
-            await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini_pro. \nVí dụ: `/gemini_pro Bạn có thể làm gì ?`"), parse_mode="MarkdownV2")
+            await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini_pro. \nVí dụ: `/gemini_pro Bạn có thể làm gì ?😬😬`"), parse_mode="MarkdownV2")
             return
         await gemini_pro(bot,message,m)
             
@@ -280,24 +280,24 @@ async def main():
             del gemini_player_dict[str(message.from_user.id)]
         if (str(message.from_user.id) in gemini_pro_player_dict):
             del gemini_pro_player_dict[str(message.from_user.id)]
-        await bot.reply_to(message, "Ok, đã xoá lịch sử chat")
+        await bot.reply_to(message, "Ok, đã xoá lịch sử chat🥲🥹")
 
     @bot.message_handler(commands=["switch"])
     async def gemini_handler(message: Message):
         if message.chat.type != "private":
-            await bot.reply_to( message , "Oh no, lệnh này chỉ dành cho trò chuyện riêng tư !")
+            await bot.reply_to( message , "Oh no, lệnh này chỉ dành cho trò chuyện riêng tư !🥱🤨")
             return
         # Check if the player is already in default_model_dict.
         if str(message.from_user.id) not in default_model_dict:
             default_model_dict[str(message.from_user.id)] = False
-            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Pro")
+            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Pro🙄🙄")
             return
         if default_model_dict[str(message.from_user.id)] == True:
             default_model_dict[str(message.from_user.id)] = False
-            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Pro")
+            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Pro😮‍💨🙄")
         else:
             default_model_dict[str(message.from_user.id)] = True
-            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Flash")
+            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Flash🥴⚡")
         
     
     
