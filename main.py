@@ -239,7 +239,7 @@ async def main():
     await bot.set_my_commands(
         commands=[
             telebot.types.BotCommand("start", "Bắt đầu"),
-            telebot.types.BotCommand("fast", "Gemini 1.5 Flash"),
+            telebot.types.BotCommand("gemini", "Gemini 1.5 Flash"),
             telebot.types.BotCommand("pro", "Gemini 1.5 Pro"),
             telebot.types.BotCommand("clear", "Xoá toàn bộ lịch sử trò chuyện"),
             telebot.types.BotCommand("switch","Chuyển đổi nhanh mô hình AI (chỉ dành cho trò chuyện riêng tư) ")
@@ -255,7 +255,7 @@ async def main():
         except IndexError:
             await bot.reply_to(message, error_info)
 
-    @bot.message_handler(commands=["fast"])
+    @bot.message_handler(commands=["gemini"])
     async def gemini_handler(message: Message):
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
@@ -269,7 +269,7 @@ async def main():
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
         except IndexError:
-            await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini_pro. \nVí dụ: `/gemini_pro Bạn có thể làm gì ?😬😬`"), parse_mode="MarkdownV2")
+            await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /pro. \nVí dụ: `/pro Bạn có thể làm gì ?😬😬`"), parse_mode="MarkdownV2")
             return
         await gemini_pro(bot,message,m)
             
