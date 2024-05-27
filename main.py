@@ -239,7 +239,7 @@ async def main():
     await bot.set_my_commands(
         commands=[
             telebot.types.BotCommand("start", "Bắt đầu"),
-            telebot.types.BotCommand("gemini", "Gemini 1.5 Flash"),
+            telebot.types.BotCommand("gemini", "Gemini 1.5 Vision"),
             telebot.types.BotCommand("pro", "Gemini 1.5 Pro"),
             telebot.types.BotCommand("clear", "Xoá toàn bộ lịch sử trò chuyện"),
             telebot.types.BotCommand("switch","Chuyển đổi nhanh mô hình AI (chỉ dành cho trò chuyện riêng tư) ")
@@ -297,7 +297,7 @@ async def main():
             await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Pro😮‍💨🙄")
         else:
             default_model_dict[str(message.from_user.id)] = True
-            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Flash🥴⚡")
+            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Vision😋⚡")
         
     
     
