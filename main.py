@@ -3,6 +3,7 @@ import traceback
 import asyncio
 import google.generativeai as genai
 import re
+import aiohttp
 import telebot
 from telebot.async_telebot import AsyncTeleBot
 from telebot.types import  Message
@@ -134,6 +135,29 @@ def escape(text, flag=0):
     return text
 
 # Prevent "create_convo" function from blocking the event loop.
+
+# URL API và API key
+api_url = "https://free-gpt-api.chatvn.org/v1/chat/completions"
+api_key = "AIzaSyCyRnM6LoeeDgdfhBvYRpFJ1uguLMoSvvU"
+
+async def call_chatgpt4_api(prompt):
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "model": "gpt-4",
+        "messages": [{"role": "user", "content": prompt}]
+    }
+
+    async with aiohttp.ClientSession() as session:
+        async with session.post(api_url, headers=headers, json=payload) as response:
+            if response.status == 200:
+                result = await response.json()
+                return result.get("choices", [{}])[0].get("message", {}).get("content", "").strip()
+            else:
+                return "⚠️⚠️⚠️\nDịch vụ không khả dụng !\nVui lòng nhập lại hoặc liên hệ quản trị viên!"
+                
 async def make_new_gemini_convo():
     loop = asyncio.get_running_loop()
 
@@ -149,7 +173,7 @@ async def make_new_gemini_convo():
     # Run the synchronous "create_convo" function in a thread pool
     convo = await loop.run_in_executor(None, create_convo)
     return convo
-
+    
 async def make_new_gemini_pro_convo():
     loop = asyncio.get_running_loop()
 
@@ -181,6 +205,16 @@ async def async_generate_content(model, contents):
     response = await loop.run_in_executor(None, generate)
     return response
 
+async def chatgpt4(bot, message, m):
+    try:
+        sent_message = await bot.reply_to(message, before_generate_info)
+        user_intro = f"Tôi là '{message.from_user.first_name}', tôi muốn hỏi: {m}"
+        response_text = await call_chatgpt4_api(user_intro)
+        await bot.edit_message_text(escape(response_text), chat_id=sent_message.chat.id, message_id=sent_message.message_id, parse_mode="MarkdownV2")
+    except Exception:
+        traceback.print_exc()
+        await bot.edit_message_text(error_info, chat_id=sent_message.chat.id, message_id=sent_message.message_id)
+        
 async def gemini(bot,message,m):
     player = None
     if str(message.from_user.id) not in gemini_player_dict:
@@ -224,14 +258,14 @@ async def gemini_pro(bot,message,m):
     except Exception:
         traceback.print_exc()
         await bot.edit_message_text(error_info, chat_id=sent_message.chat.id, message_id=sent_message.message_id)
-
+        
 async def main():
     # Init args
     parser = argparse.ArgumentParser()
     parser.add_argument("tg_token", help="telegram token")
     parser.add_argument("GOOGLE_GEMINI_KEY", help="Google Gemini API key")
     options = parser.parse_args()
-    print("Đã thêm câu lệnh.")
+    print("Arg parse done.")
 
     genai.configure(api_key=options.GOOGLE_GEMINI_KEY)
 
@@ -244,7 +278,8 @@ async def main():
             telebot.types.BotCommand("gemini", "Gemini 1.5 Vision"),
             telebot.types.BotCommand("pro", "Gemini 1.5 Pro"),
             telebot.types.BotCommand("clear", "Xoá toàn bộ lịch sử trò chuyện"),
-            telebot.types.BotCommand("switch","Chuyển đổi nhanh mô hình AI (chỉ dành cho trò chuyện riêng tư) ")
+            telebot.types.BotCommand("switch", "Chuyển đổi nhanh mô hình AI (chỉ dành cho trò chuyện riêng tư)"),
+            telebot.types.BotCommand("chatgpt4", "ChatGPT-4")  # Thêm lệnh mới ở đây
         ],
     )
     print("Bot init done.")
@@ -261,21 +296,19 @@ async def main():
     async def gemini_handler(message: Message):
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
-            user_intro = f"Tôi là {message.from_user.first_name} , tôi muốn nói😊: {m}"
         except IndexError:
             await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini. \nVí dụ: `/gemini Cách để thoát ế ?🤪😜`"), parse_mode="MarkdownV2")
             return
-        await gemini(bot,message,user_intro)
+        await gemini(bot,message,m)
 
     @bot.message_handler(commands=["pro"])
     async def gemini_handler(message: Message):
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
-            user_intro = f"Tôi là {message.from_user.first_name}, tôi muốn nói😊: {m}"
         except IndexError:
             await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /pro. \nVí dụ: `/pro Bạn có thể làm gì ?😬😬`"), parse_mode="MarkdownV2")
             return
-        await gemini_pro(bot,message,user_intro)
+        await gemini_pro(bot,message,m)
 
     @bot.message_handler(commands=["clear"])
     async def gemini_handler(message: Message):
@@ -303,21 +336,16 @@ async def main():
             default_model_dict[str(message.from_user.id)] = True
             await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Vision😋⚡")
 
-
-
-    @bot.message_handler(func=lambda message: message.chat.type == "private", content_types=['text'])
-    async def gemini_private_handler(message: Message):
-        m = message.text.strip()
-        user_intro = f"Tôi là {message.from_user.first_name} , tôi muốn nói😊: {m}"
-
-        if str(message.from_user.id) not in default_model_dict:
-            default_model_dict[str(message.from_user.id)] = True
-            await gemini(bot,message,user_intro)
-        else:
-            if default_model_dict[str(message.from_user.id)]:
-                await gemini(bot,message,user_intro)
-            else:
-                await gemini_pro(bot,message,user_intro)
+    # Thêm handler cho lệnh chatgpt4
+    @bot.message_handler(commands=["chatgpt4"])
+    async def chatgpt4_handler(message: Message):
+        try:
+            m = message.text.strip().split(maxsplit=1)[1].strip()
+            user_intro = f"Tôi là '{message.from_user.first_name}', tôi muốn nói😁: {m}"
+        except IndexError:
+            await bot.reply_to(message, escape("Hãy bổ sung điều bạn muốn nói sau /chatgpt4. \nVí dụ: `/chatgpt4 Bạn có thể làm gì?😊`"), parse_mode="MarkdownV2")
+            return
+        await chatgpt4(bot, message, user_intro)
 
 
     @bot.message_handler(content_types=["photo"])
