@@ -170,7 +170,7 @@ async def make_new_gemini_pro_convo():
 async def send_message(player, message):
     loop = asyncio.get_running_loop()
     await loop.run_in_executor(None, player.send_message, message)
-    
+
 # Prevent "model.generate_content" function from blocking the event loop.
 async def async_generate_content(model, contents):
     loop = asyncio.get_running_loop()
@@ -192,7 +192,8 @@ async def gemini(bot,message,m):
         player.history = player.history[2:]
     try:
         sent_message = await bot.reply_to(message, before_generate_info)
-        await send_message(player, m)
+        user_intro = f"Tôi là {message.from_user.first_name}, tôi muốn hỏi😊: {m}"
+        await send_message(player, user_intro)
         try:
             await bot.edit_message_text(escape(player.last.text), chat_id=sent_message.chat.id, message_id=sent_message.message_id, parse_mode="MarkdownV2")
         except:
@@ -213,7 +214,8 @@ async def gemini_pro(bot,message,m):
         player.history = player.history[2:]
     try:
         sent_message = await bot.reply_to(message, before_generate_info)
-        await send_message(player, m)
+        user_intro = f"Tôi là {message.from_user.first_name}, tôi muốn hỏi😊: {m}"
+        await send_message(player, user_intro)
         try:
             await bot.edit_message_text(escape(player.last.text), chat_id=sent_message.chat.id, message_id=sent_message.message_id, parse_mode="MarkdownV2")
         except:
@@ -229,7 +231,7 @@ async def main():
     parser.add_argument("tg_token", help="telegram token")
     parser.add_argument("GOOGLE_GEMINI_KEY", help="Google Gemini API key")
     options = parser.parse_args()
-    print("Arg parse done.")
+    print("Đã thêm câu lệnh.")
 
     genai.configure(api_key=options.GOOGLE_GEMINI_KEY)
 
@@ -259,20 +261,22 @@ async def main():
     async def gemini_handler(message: Message):
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
+            user_intro = f"Tôi là {message.from_user.first_name} , tôi muốn hỏi😊: {m}"
         except IndexError:
             await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini. \nVí dụ: `/gemini Cách để thoát ế ?🤪😜`"), parse_mode="MarkdownV2")
             return
-        await gemini(bot,message,m)
+        await gemini(bot,message,user_intro)
 
     @bot.message_handler(commands=["pro"])
     async def gemini_handler(message: Message):
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
+            user_intro = f"Tôi là {message.from_user.first_name}, tôi muốn hỏi😊: {m}"
         except IndexError:
             await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /pro. \nVí dụ: `/pro Bạn có thể làm gì ?😬😬`"), parse_mode="MarkdownV2")
             return
-        await gemini_pro(bot,message,m)
-            
+        await gemini_pro(bot,message,user_intro)
+
     @bot.message_handler(commands=["clear"])
     async def gemini_handler(message: Message):
         # Check if the player is already in gemini_player_dict.
@@ -298,21 +302,22 @@ async def main():
         else:
             default_model_dict[str(message.from_user.id)] = True
             await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Vision😋⚡")
-        
-    
-    
+
+
+
     @bot.message_handler(func=lambda message: message.chat.type == "private", content_types=['text'])
     async def gemini_private_handler(message: Message):
         m = message.text.strip()
+        user_intro = f"Tôi là {message.from_user.first_name} , tôi muốn hỏi😊: {m}"
 
         if str(message.from_user.id) not in default_model_dict:
             default_model_dict[str(message.from_user.id)] = True
-            await gemini(bot,message,m)
+            await gemini(bot,message,user_intro)
         else:
             if default_model_dict[str(message.from_user.id)]:
-                await gemini(bot,message,m)
+                await gemini(bot,message,user_intro)
             else:
-                await gemini_pro(bot,message,m)
+                await gemini_pro(bot,message,user_intro)
 
 
     @bot.message_handler(content_types=["photo"])
