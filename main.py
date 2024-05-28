@@ -192,7 +192,7 @@ async def gemini(bot,message,m):
         player.history = player.history[2:]
     try:
         sent_message = await bot.reply_to(message, before_generate_info)
-        user_intro = f"Tôi là {message.from_user.first_name}, tôi muốn hỏi😊: {m}"
+        user_intro = f"Tôi là {message.from_user.first_name}, tôi muốn nói😊: {m}"
         await send_message(player, user_intro)
         try:
             await bot.edit_message_text(escape(player.last.text), chat_id=sent_message.chat.id, message_id=sent_message.message_id, parse_mode="MarkdownV2")
@@ -214,7 +214,7 @@ async def gemini_pro(bot,message,m):
         player.history = player.history[2:]
     try:
         sent_message = await bot.reply_to(message, before_generate_info)
-        user_intro = f"Tôi là {message.from_user.first_name}, tôi muốn hỏi😊: {m}"
+        user_intro = f"Tôi là {message.from_user.first_name}, tôi muốn nói😊: {m}"
         await send_message(player, user_intro)
         try:
             await bot.edit_message_text(escape(player.last.text), chat_id=sent_message.chat.id, message_id=sent_message.message_id, parse_mode="MarkdownV2")
@@ -261,7 +261,7 @@ async def main():
     async def gemini_handler(message: Message):
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
-            user_intro = f"Tôi là {message.from_user.first_name} , tôi muốn hỏi😊: {m}"
+            user_intro = f"Tôi là {message.from_user.first_name} , tôi muốn nói😊: {m}"
         except IndexError:
             await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini. \nVí dụ: `/gemini Cách để thoát ế ?🤪😜`"), parse_mode="MarkdownV2")
             return
@@ -271,7 +271,7 @@ async def main():
     async def gemini_handler(message: Message):
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
-            user_intro = f"Tôi là {message.from_user.first_name}, tôi muốn hỏi😊: {m}"
+            user_intro = f"Tôi là {message.from_user.first_name}, tôi muốn nói😊: {m}"
         except IndexError:
             await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /pro. \nVí dụ: `/pro Bạn có thể làm gì ?😬😬`"), parse_mode="MarkdownV2")
             return
@@ -308,7 +308,7 @@ async def main():
     @bot.message_handler(func=lambda message: message.chat.type == "private", content_types=['text'])
     async def gemini_private_handler(message: Message):
         m = message.text.strip()
-        user_intro = f"Tôi là {message.from_user.first_name} , tôi muốn hỏi😊: {m}"
+        user_intro = f"Tôi là {message.from_user.first_name} , tôi muốn nói😊: {m}"
 
         if str(message.from_user.id) not in default_model_dict:
             default_model_dict[str(message.from_user.id)] = True
