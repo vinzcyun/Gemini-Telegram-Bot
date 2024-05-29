@@ -139,7 +139,7 @@ async def make_new_gemini_convo():
 
     def create_convo():
         model = genai.GenerativeModel(
-            model_name="models/gemini-1.5-pro",
+            model_name="models/gemini-1.5-flash-latest",
             generation_config=generation_config,
             safety_settings=safety_settings,
         )
@@ -192,7 +192,7 @@ async def gemini(bot,message,m):
         player.history = player.history[2:]
     try:
         sent_message = await bot.reply_to(message, before_generate_info)
-        user_intro = f"Tôi là {message.from_user.first_name} . Tôi muốn nói😊: {m}"
+        user_intro = f"Người dùng {message.from_user.first_name} muốn nói😊: {m}"
         await send_message(player, user_intro)
         try:
             await bot.edit_message_text(escape(player.last.text), chat_id=sent_message.chat.id, message_id=sent_message.message_id, parse_mode="MarkdownV2")
@@ -214,7 +214,7 @@ async def gemini_pro(bot,message,m):
         player.history = player.history[2:]
     try:
         sent_message = await bot.reply_to(message, before_generate_info)
-        user_intro = f"Tôi là {message.from_user.first_name}, tôi muốn nói😊: {m}"
+        user_intro = f"Người dùng {message.from_user.first_name} muốn nói😊: {m}"
         await send_message(player, user_intro)
         try:
             await bot.edit_message_text(escape(player.last.text), chat_id=sent_message.chat.id, message_id=sent_message.message_id, parse_mode="MarkdownV2")
@@ -241,7 +241,7 @@ async def main():
     await bot.set_my_commands(
         commands=[
             telebot.types.BotCommand("start", "Bắt đầu"),
-            telebot.types.BotCommand("ask", "Gemini Pro 1.5 bản ổn định"),
+            telebot.types.BotCommand("gemini", "Gemini 1.5 Vision"),
             telebot.types.BotCommand("pro", "Gemini 1.5 Pro"),
             telebot.types.BotCommand("clear", "Xoá toàn bộ lịch sử trò chuyện"),
             telebot.types.BotCommand("switch","Chuyển đổi nhanh mô hình AI (chỉ dành cho trò chuyện riêng tư) ")
@@ -257,13 +257,13 @@ async def main():
         except IndexError:
             await bot.reply_to(message, error_info)
 
-    @bot.message_handler(commands=["ask"])
+    @bot.message_handler(commands=["gemini"])
     async def gemini_handler(message: Message):
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
-            user_intro = f"Tôi là {message.from_user.first_name} . Tôi muốn nói😊: {m}"
+            user_intro = f"Người dùng {message.from_user.first_name}  muốn nói😊: {m}"
         except IndexError:
-            await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gpt. \nVí dụ: `/ask Cách để thoát ế ?🤪😜`"), parse_mode="MarkdownV2")
+            await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /gemini. \nVí dụ: `/gemini Cách để thoát ế ?🤪😜`"), parse_mode="MarkdownV2")
             return
         await gemini(bot,message,user_intro)
 
@@ -271,7 +271,7 @@ async def main():
     async def gemini_handler(message: Message):
         try:
             m = message.text.strip().split(maxsplit=1)[1].strip()
-            user_intro = f"Tôi là {message.from_user.first_name}, tôi muốn nói😊: {m}"
+            user_intro = f"Người dùng {message.from_user.first_name} muốn nói😊: {m}"
         except IndexError:
             await bot.reply_to( message , escape("Hãy bổ sung điều bạn muốn nói sau /pro. \nVí dụ: `/pro Bạn có thể làm gì ?😬😬`"), parse_mode="MarkdownV2")
             return
@@ -301,7 +301,7 @@ async def main():
             await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Pro😮‍💨🙄")
         else:
             default_model_dict[str(message.from_user.id)] = True
-            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Pro phiên bản ổn định😋⚡")
+            await bot.reply_to( message , "Được rồi, bây giờ bạn đang dùng Gemini 1.5 Vision😋⚡")
 
 
 
