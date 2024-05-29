@@ -139,7 +139,7 @@ async def make_new_gemini_convo():
 
     def create_convo():
         model = genai.GenerativeModel(
-            model_name="models/gemini-1.5-flash-latest",
+            model_name="models/gemini-1.5-pro",
             generation_config=generation_config,
             safety_settings=safety_settings,
         )
