@@ -247,7 +247,7 @@ async def main():
             telebot.types.BotCommand("switch","Chuyển đổi nhanh mô hình AI (chỉ dành cho trò chuyện riêng tư) ")
         ],
     )
-    print("Bot init done.")
+    print("Bắt đầu triển khai BOT.")
 
     # Init commands
     @bot.message_handler(commands=["start"])
@@ -368,7 +368,7 @@ async def main():
                 await bot.edit_message_text(error_info, chat_id=sent_message.chat.id, message_id=sent_message.message_id)
 
     # Start bot
-    print("Starting Gemini_Telegram_Bot.")
+    print("Bắt đầu chạy BOT.")
     await bot.polling(none_stop=True)
 
 if __name__ == '__main__':
